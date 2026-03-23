@@ -2,12 +2,17 @@ import type { ReactNode } from 'react';
 import { createReconciler } from './reconciler';
 import type { IEngineAdapter } from './IEngineAdapter';
 import { LayoutManager } from './LayoutManager';
+import { NodePool } from './NodePool';
 import { tweenEngine } from './TweenEngine';
 
 export interface RenderOptions {
   width?: number;
   height?: number;
   layout?: boolean;
+  /** Enable node pooling for reduced GC pressure in scrolling/recycling scenarios */
+  enablePool?: boolean;
+  /** Max recycled nodes per element type (default 50) */
+  poolMaxPerType?: number;
 }
 
 export interface TowerUIRoot {
@@ -34,7 +39,8 @@ export function render(element: ReactNode, adapter: IEngineAdapter, options?: Re
       );
     }
 
-    const reconciler = createReconciler(adapter, layout);
+    const pool = options?.enablePool !== false ? new NodePool(adapter, options?.poolMaxPerType ?? 50) : null;
+    const reconciler = createReconciler(adapter, layout, pool);
     const container = reconciler.createContainer(
       adapter.getRootContainer(),
       0,     // tag: LegacyRoot

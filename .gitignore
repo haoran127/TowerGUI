@@ -34,6 +34,9 @@ crashlytics-build.properties
 # ==============================
 apps/unity-demo/PuertsDL/
 
+# TextMesh Pro 包资产（由 Unity Package Manager 自动恢复）
+**/Assets/TextMesh Pro/
+
 # ==============================
 # 第三方参考代码（非本项目产物）
 # ==============================
@@ -43,6 +46,12 @@ docs/github/
 # Preview cache
 # ==============================
 .tower-preview/
+
+# ==============================
+# Generated prefabs (rebuild from .tower.json)
+# ==============================
+**/GeneratedPrefabs/
+**/Assets/GeneratedPrefabs/
 
 # ==============================
 # IDE / OS
@@ -58,6 +67,26 @@ docs/github/
 *~
 .DS_Store
 Thumbs.db
+
+# ==============================
+# 临时测试 / 导入 / 工具输出
+# ==============================
+_test_import/
+current.tower.json
+_golden-test.tower.json
+tools/_output/
+
+# ==============================
+# 第三方客户端代码（非本项目产物）
+# ==============================
+apps/lfclient/
+apps/uwclient/
+apps/UIActivity/
+apps/UIBackpack/
+apps/unity-demo/uw_new/
+apps/unity-demo/TsProject/src/lfgame/
+apps/unity-demo/Assets/123.unity
+apps/unity-demo/Assets/123.unity.meta
 
 # ==============================
 # 敏感文件

@@ -9,10 +9,15 @@ using TowerUI;
 /// </summary>
 public class BenchmarkSetup : MonoBehaviour
 {
+    public static bool usePuerts = false;
+
     [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
     static void AutoSetup()
     {
+        // Skip when GameDemo (TowerUIRenderer path) is active
         if (FindAnyObjectByType<Canvas>() != null) return;
+        if (FindAnyObjectByType<GameDemo>() != null) return;
+        if (!usePuerts) return;
 
         var canvasGo = new GameObject("Canvas");
         var canvas = canvasGo.AddComponent<Canvas>();

@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections.Generic;
 
 namespace TowerUI
 {
@@ -23,6 +24,11 @@ namespace TowerUI
                     if (_tmpFont == null)
                         _tmpFont = Resources.Load<TMPro.TMP_FontAsset>("Fonts & Materials/LiberationSans SDF");
                     _useTMP = _tmpFont != null;
+
+                    if (_useTMP && _tmpFont != null)
+                    {
+                        AddCJKFallback(_tmpFont);
+                    }
                 }
                 catch (System.Exception e)
                 {
@@ -31,6 +37,30 @@ namespace TowerUI
                 }
             }
             return _useTMP;
+        }
+
+        private static void AddCJKFallback(TMPro.TMP_FontAsset defaultFont)
+        {
+            Font font = Resources.Load<Font>("Fonts/simhei");
+            if (font == null) font = Resources.Load<Font>("Fonts/msyh");
+            if (font == null)
+            {
+                Debug.LogWarning("[TowerUI] No CJK font in Resources/Fonts/. Put simhei.ttf there.");
+                return;
+            }
+
+            var cjkAsset = TMPro.TMP_FontAsset.CreateFontAsset(font);
+            if (cjkAsset == null)
+            {
+                Debug.LogWarning("[TowerUI] Failed to create CJK TMP_FontAsset from " + font.name);
+                return;
+            }
+            cjkAsset.name = "CJK-Dynamic";
+
+            if (defaultFont.fallbackFontAssetTable == null)
+                defaultFont.fallbackFontAssetTable = new List<TMPro.TMP_FontAsset>();
+            defaultFont.fallbackFontAssetTable.Add(cjkAsset);
+            Debug.Log($"[TowerUI] CJK fallback added: {font.name}");
         }
 
         // ── Create methods ─────────────────────────────────────
@@ -227,6 +257,113 @@ namespace TowerUI
             slider.minValue = 0;
             slider.maxValue = 1;
             slider.value = 0;
+
+            return go;
+        }
+
+        public static GameObject CreateDropdown(string name, Transform parent)
+        {
+            var go = CreateWithImage(name, parent);
+            var bgImg = go.GetComponent<Image>();
+            if (bgImg != null)
+                bgImg.color = new Color(0.15f, 0.15f, 0.25f, 1f);
+
+            var safeName = name ?? "Dropdown";
+
+            var labelGO = new GameObject(safeName + "/Label");
+            labelGO.transform.SetParent(go.transform, false);
+            var labelRT = labelGO.AddComponent<RectTransform>();
+            labelRT.anchorMin = Vector2.zero;
+            labelRT.anchorMax = Vector2.one;
+            labelRT.offsetMin = new Vector2(10, 0);
+            labelRT.offsetMax = new Vector2(-30, 0);
+            if (UseTMP())
+            {
+                var tmp = labelGO.AddComponent<TMPro.TextMeshProUGUI>();
+                if (_tmpFont != null) tmp.font = _tmpFont;
+                tmp.text = "Select...";
+                tmp.fontSize = 14;
+            }
+            else
+            {
+                var txt = labelGO.AddComponent<Text>();
+                txt.text = "Select...";
+                txt.fontSize = 14;
+                txt.color = Color.white;
+            }
+
+            var arrowGO = new GameObject(safeName + "/Arrow");
+            arrowGO.transform.SetParent(go.transform, false);
+            var arrowRT = arrowGO.AddComponent<RectTransform>();
+            arrowRT.anchorMin = new Vector2(1, 0);
+            arrowRT.anchorMax = new Vector2(1, 1);
+            arrowRT.sizeDelta = new Vector2(24, 0);
+            arrowRT.anchoredPosition = new Vector2(-12, 0);
+            var arrowImg = arrowGO.AddComponent<Image>();
+            arrowImg.color = new Color(0.6f, 0.6f, 0.7f, 1f);
+
+            var tmplGO = CreateWithImage(safeName + "/Template", go.transform);
+            tmplGO.SetActive(false);
+            var tmplRT = tmplGO.GetComponent<RectTransform>();
+            tmplRT.anchorMin = new Vector2(0, 0);
+            tmplRT.anchorMax = new Vector2(1, 0);
+            tmplRT.pivot = new Vector2(0.5f, 1f);
+            tmplRT.sizeDelta = new Vector2(0, 150);
+            var tmplImg = tmplGO.GetComponent<Image>();
+            if (tmplImg != null) tmplImg.color = new Color(0.12f, 0.12f, 0.2f, 1f);
+            var tmplScroll = tmplGO.AddComponent<ScrollRect>();
+
+            var vpGO = CreateUIGameObject(safeName + "/Viewport", tmplGO.transform);
+            var vpRT = vpGO.GetComponent<RectTransform>();
+            vpRT.anchorMin = Vector2.zero;
+            vpRT.anchorMax = Vector2.one;
+            vpRT.offsetMin = Vector2.zero;
+            vpRT.offsetMax = Vector2.zero;
+            vpGO.AddComponent<RectMask2D>();
+
+            var contentGO = CreateUIGameObject(safeName + "/Content", vpGO.transform);
+            var contentRT = contentGO.GetComponent<RectTransform>();
+            contentRT.anchorMin = new Vector2(0, 1);
+            contentRT.anchorMax = new Vector2(1, 1);
+            contentRT.pivot = new Vector2(0.5f, 1f);
+            contentRT.sizeDelta = new Vector2(0, 28);
+
+            tmplScroll.content = contentRT;
+            tmplScroll.viewport = vpRT;
+            tmplScroll.vertical = true;
+            tmplScroll.horizontal = false;
+
+            var itemGO = CreateWithImage("Item", contentGO.transform);
+            var itemRT = itemGO.GetComponent<RectTransform>();
+            itemRT.anchorMin = new Vector2(0, 0.5f);
+            itemRT.anchorMax = new Vector2(1, 0.5f);
+            itemRT.sizeDelta = new Vector2(0, 28);
+            var itemToggle = itemGO.AddComponent<Toggle>();
+
+            var itemLabelGO = new GameObject("Item Label");
+            itemLabelGO.transform.SetParent(itemGO.transform, false);
+            var itemLabelRT = itemLabelGO.AddComponent<RectTransform>();
+            itemLabelRT.anchorMin = Vector2.zero;
+            itemLabelRT.anchorMax = Vector2.one;
+            itemLabelRT.offsetMin = new Vector2(10, 0);
+            itemLabelRT.offsetMax = Vector2.zero;
+            if (UseTMP())
+            {
+                var tmp = itemLabelGO.AddComponent<TMPro.TextMeshProUGUI>();
+                if (_tmpFont != null) tmp.font = _tmpFont;
+                tmp.fontSize = 14;
+            }
+            else
+            {
+                var txt = itemLabelGO.AddComponent<Text>();
+                txt.fontSize = 14;
+                txt.color = Color.white;
+            }
+
+            var dd = go.AddComponent<TMPro.TMP_Dropdown>();
+            dd.template = tmplRT;
+            dd.captionText = labelGO.GetComponent<TMPro.TextMeshProUGUI>();
+            dd.itemText = itemLabelGO.GetComponent<TMPro.TextMeshProUGUI>();
 
             return go;
         }

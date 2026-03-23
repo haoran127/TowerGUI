@@ -1,0 +1,17 @@
+version: "3.9"
+
+services:
+  tower-editor:
+    build: .
+    ports:
+      - "3000:3000"
+    volumes:
+      # 挂载共享项目目录（NAS / 网络盘 / 本地目录均可）
+      - ./projects:/data/projects
+    environment:
+      - NODE_ENV=production
+      - TOWER_PROJECTS_DIR=/data/projects
+      # 可选：AI 辅助功能
+      # - OPENAI_API_KEY=sk-xxx
+      # - ANTHROPIC_API_KEY=sk-ant-xxx
+    restart: unless-stopped

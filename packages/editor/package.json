@@ -1,0 +1,17 @@
+{
+  "name": "@tower-ui/editor",
+  "version": "0.1.0",
+  "private": true,
+  "main": "src/index.ts",
+  "dependencies": {
+    "@tower-ui/core": "workspace:*",
+    "@tower-ui/schema": "workspace:*",
+    "@tower-ui/web-adapter": "workspace:*",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.18",
+    "@types/react-dom": "^18.3.5"
+  }
+}

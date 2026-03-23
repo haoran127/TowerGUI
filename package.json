@@ -4,10 +4,18 @@
   "private": true,
   "scripts": {
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "dev": "tsx packages/cli/src/index.ts dev",
+    "start": "tsx packages/cli/src/index.ts dev",
+    "serve": "tsx packages/cli/src/index.ts serve",
     "type-check": "turbo run type-check",
     "clean": "turbo run clean",
-    "tower-ui": "tsx packages/cli/src/index.ts"
+    "tower-ui": "tsx packages/cli/src/index.ts",
+    "validate": "node tools/validate-all.mjs",
+    "lint:naming": "node tools/naming-linter.mjs",
+    "inventory": "node tools/inventory.mjs",
+    "coverage": "node tools/coverage-check.mjs",
+    "test:roundtrip": "node tools/roundtrip-test.mjs",
+    "ci": "node tools/validate-all.mjs --strict && node tools/naming-linter.mjs && node tools/roundtrip-test.mjs && node tools/coverage-check.mjs"
   },
   "devDependencies": {
     "tsx": "^4.21.0",

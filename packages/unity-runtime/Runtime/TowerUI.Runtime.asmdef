@@ -2,8 +2,7 @@
   "name": "TowerUI.Runtime",
   "rootNamespace": "TowerUI",
   "references": [
-    "Unity.TextMeshPro",
-    "com.tencent.puerts.core"
+    "Unity.TextMeshPro"
   ],
   "includePlatforms": [],
   "excludePlatforms": [],

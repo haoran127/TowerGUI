@@ -3,6 +3,7 @@ import { DefaultEventPriority } from 'react-reconciler/constants';
 import type { IEngineAdapter } from './IEngineAdapter';
 import type { EngineNode } from './types';
 import type { LayoutManager } from './LayoutManager';
+import type { NodePool } from './NodePool';
 
 type Props = Record<string, any>;
 
@@ -43,7 +44,7 @@ function extractLayoutProps(props: Props): Props | null {
   return result;
 }
 
-export function createReconciler(adapter: IEngineAdapter, layoutManager: LayoutManager | null) {
+export function createReconciler(adapter: IEngineAdapter, layoutManager: LayoutManager | null, nodePool?: NodePool | null) {
   return Reconciler({
     supportsMutation: true,
     supportsPersistence: false,
@@ -51,7 +52,8 @@ export function createReconciler(adapter: IEngineAdapter, layoutManager: LayoutM
     isPrimaryRenderer: true,
 
     createInstance(type: string, props: Props) {
-      const node = adapter.createElement(type);
+      const node = nodePool ? nodePool.acquire(type) : adapter.createElement(type);
+      if (nodePool) (node as any).__towerType = type;
       layoutManager?.createNode(node);
 
       const layoutProps = extractLayoutProps(props);
@@ -96,12 +98,22 @@ export function createReconciler(adapter: IEngineAdapter, layoutManager: LayoutM
 
     removeChild(parent: EngineNode, child: EngineNode) {
       layoutManager?.removeNode(child);
-      adapter.removeChild(parent, child);
+      if (nodePool && (child as any).__towerType) {
+        adapter.removeChild(parent, child);
+        nodePool.recycle((child as any).__towerType, child);
+      } else {
+        adapter.removeChild(parent, child);
+      }
     },
 
     removeChildFromContainer(container: EngineNode, child: EngineNode) {
       layoutManager?.removeNode(child);
-      adapter.removeChild(container, child);
+      if (nodePool && (child as any).__towerType) {
+        adapter.removeChild(container, child);
+        nodePool.recycle((child as any).__towerType, child);
+      } else {
+        adapter.removeChild(container, child);
+      }
     },
 
     clearContainer(container: EngineNode) {

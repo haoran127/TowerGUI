@@ -38,10 +38,10 @@ export interface UINodeProps {
   rowGap?: number;
   columnGap?: number;
   position?: 'relative' | 'absolute';
-  top?: number;
-  left?: number;
-  right?: number;
-  bottom?: number;
+  top?: number | string;
+  left?: number | string;
+  right?: number | string;
+  bottom?: number | string;
   overflow?: 'visible' | 'hidden' | 'scroll';
   aspectRatio?: number;
 

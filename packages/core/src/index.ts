@@ -2,6 +2,7 @@ export { render } from './render';
 export type { RenderOptions, TowerUIRoot } from './render';
 export { createReconciler } from './reconciler';
 export { LayoutManager } from './LayoutManager';
+export { renderDocument, documentToElement } from './json-renderer';
 export { FlexNode } from './FlexLayout';
 export type { FlexStyle, FlexSize, LayoutResult } from './FlexLayout';
 export { useUIScaler, useToggle, setUIScalerInfo } from './hooks';
@@ -48,7 +49,8 @@ export { GameWindow } from './GameWindow';
 export type { GameWindowProps } from './GameWindow';
 
 // Rich Text
-export { ubbToTMP, htmlToTMP, stripTags } from './richtext';
+export { ubbToTMP, htmlToTMP, stripTags, parseRichText, formatChat, extractMentions, registerEmojis } from './richtext';
+export type { RichTextLink, ParsedRichText, RichTextOptions, LinkType } from './richtext';
 
 // Components
 export {
@@ -126,6 +128,17 @@ export type { ProfileFrame, ProfilerAPI } from './Profiler';
 // Countdown
 export { useCountdown } from './useCountdown';
 export type { CountdownConfig, CountdownReturn } from './useCountdown';
+
+// Screen Manager
+export { ScreenManagerProvider, useScreenManager } from './ScreenManager';
+export type { ScreenConfig, ScreenEntry, ScreenManagerAPI } from './ScreenManager';
+
+// Number / Time / Resource formatting
+export { formatNumber, formatDuration, formatCountdown, formatResource, formatPercent, formatPower, formatTimeAgo, formatCoord } from './formatUtils';
+
+// Guide / Tutorial System
+export { GuideManagerProvider, useGuideManager, useGuideStep } from './GuideSystem';
+export type { GuideStep, GuideConfig, GuideState, GuideOverlayProps, GuideManagerAPI } from './GuideSystem';
 
 // Badge / Red Dot
 export { badgeStore, useBadge, useBadgeActions } from './badge';

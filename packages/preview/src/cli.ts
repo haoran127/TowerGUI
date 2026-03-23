@@ -26,15 +26,26 @@ if (!parsed.entry) {
   Usage: tower-ui-preview <entry.tsx> [options]
 
   Options:
-    --port <number>    Port (default: 3000)
-    --width <number>   Canvas width (default: 1280)
-    --height <number>  Canvas height (default: 720)
-    --title <string>   Window title
+    --port <number>       Port (default: 3000)
+    --width <number>      Canvas width (default: 1280)
+    --height <number>     Canvas height (default: 720)
+    --title <string>      Window title
+    --static <path>       Additional static asset directory (can repeat)
+    --document <path>     .tower.json file for editor (enables /editor page)
 
   Example:
     tower-ui-preview src/App.tsx --port 3000 --width 1920 --height 1080
+    tower-ui-preview src/App.tsx --document ui/main.tower.json
   `);
   process.exit(0);
+}
+
+const staticDirs: string[] = [];
+for (let i = 0; i < args.length; i++) {
+  if (args[i] === '--static' && args[i + 1]) {
+    staticDirs.push(path.resolve(args[i + 1]));
+    i++;
+  }
 }
 
 startDevServer({
@@ -43,4 +54,6 @@ startDevServer({
   width: parsed.width ? Number(parsed.width) : undefined,
   height: parsed.height ? Number(parsed.height) : undefined,
   title: parsed.title,
+  staticDirs: staticDirs.length > 0 ? staticDirs : undefined,
+  documentPath: parsed.document ? path.resolve(parsed.document) : undefined,
 });

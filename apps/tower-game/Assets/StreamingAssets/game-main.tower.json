@@ -1,0 +1,107 @@
+{
+  "$schema": "tower-ui",
+  "version": "1.0",
+  "meta": {
+    "name": "TowerGuardians",
+    "designWidth": 1920,
+    "designHeight": 1080
+  },
+  "root": {
+    "type": "ui-view",
+    "props": { "width": 1920, "height": 1080, "tint": "#0a0e14" },
+    "children": [
+      {
+        "type": "ui-view",
+        "props": {
+          "position": "absolute", "left": 0, "right": 0, "top": 0, "height": 72,
+          "tint": "#141b24",
+          "flexDirection": "row", "alignItems": "center", "padding": [0, 40, 0, 40]
+        },
+        "children": [
+          { "type": "ui-text", "props": { "text": "Tower Guardians", "fontSize": 30, "color": "#f0b840", "bold": true, "width": 300, "height": 40 } },
+          { "type": "ui-view", "props": { "width": 600, "height": 1 } },
+          {
+            "type": "ui-view",
+            "props": { "flexDirection": "row", "alignItems": "center", "gap": 8, "height": 40, "width": 200 },
+            "children": [
+              { "type": "ui-view", "props": { "width": 28, "height": 28, "tint": "#f0b840" } },
+              { "type": "ui-text", "props": { "name": "goldText", "text": "0", "fontSize": 24, "color": "#f0b840", "bold": true, "width": 160, "height": 36 } }
+            ]
+          },
+          { "type": "ui-view", "props": { "width": 30, "height": 1 } },
+          {
+            "type": "ui-view",
+            "props": { "flexDirection": "row", "alignItems": "center", "gap": 8, "height": 40, "width": 200 },
+            "children": [
+              { "type": "ui-view", "props": { "width": 28, "height": 28, "tint": "#3b8eed" } },
+              { "type": "ui-text", "props": { "name": "waveText", "text": "Wave 1", "fontSize": 22, "color": "#8899aa", "width": 160, "height": 36 } }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "ui-view",
+        "props": { "name": "leftPanel", "position": "absolute", "left": 40, "top": 100, "width": 320, "height": 500, "tint": "#141b24" },
+        "children": [
+          { "type": "ui-text", "props": { "position": "absolute", "left": 20, "top": 16, "width": 280, "height": 36, "text": "Stats", "fontSize": 22, "color": "#f0b840", "bold": true } },
+          { "type": "ui-view", "props": { "position": "absolute", "left": 20, "top": 60, "right": 20, "height": 1, "tint": "#2a3644" } },
+          { "type": "ui-text", "props": { "name": "atkText", "position": "absolute", "left": 20, "top": 80, "width": 280, "height": 32, "text": "ATK:  1", "fontSize": 20, "color": "#ee4444" } },
+          { "type": "ui-text", "props": { "name": "defText", "position": "absolute", "left": 20, "top": 120, "width": 280, "height": 32, "text": "DEF:  1", "fontSize": 20, "color": "#3b8eed" } },
+          { "type": "ui-text", "props": { "name": "hpMaxText", "position": "absolute", "left": 20, "top": 160, "width": 280, "height": 32, "text": "HP:   100", "fontSize": 20, "color": "#44cc66" } },
+          { "type": "ui-view", "props": { "position": "absolute", "left": 20, "top": 210, "right": 20, "height": 1, "tint": "#2a3644" } },
+          { "type": "ui-text", "props": { "name": "killsText", "position": "absolute", "left": 20, "top": 230, "width": 280, "height": 32, "text": "Kills: 0", "fontSize": 20, "color": "#8899aa" } },
+          { "type": "ui-text", "props": { "name": "dpsText", "position": "absolute", "left": 20, "top": 270, "width": 280, "height": 32, "text": "DPS:  0", "fontSize": 20, "color": "#ee8833" } },
+          { "type": "ui-text", "props": { "name": "autoText", "position": "absolute", "left": 20, "top": 310, "width": 280, "height": 32, "text": "Auto: OFF", "fontSize": 20, "color": "#556677" } }
+        ]
+      },
+      {
+        "type": "ui-view",
+        "props": { "position": "absolute", "left": 400, "right": 400, "top": 100, "bottom": 30 },
+        "children": [
+          {
+            "type": "ui-view",
+            "props": { "position": "absolute", "left": "calc(50% - 160px)", "top": 20, "width": 320, "height": 320, "tint": "#1a2332" },
+            "children": [
+              {
+                "type": "ui-view",
+                "props": { "position": "absolute", "left": "calc(50% - 100px)", "top": 30, "width": 200, "height": 200, "tint": "#2a3644" },
+                "children": [
+                  { "type": "ui-view", "props": { "position": "absolute", "left": "calc(50% - 60px)", "top": 20, "width": 120, "height": 120, "tint": "#3b8eed" } },
+                  { "type": "ui-view", "props": { "position": "absolute", "left": "calc(50% - 30px)", "top": 60, "width": 60, "height": 60, "tint": "#f0b840" } }
+                ]
+              },
+              { "type": "ui-text", "props": { "position": "absolute", "left": 0, "right": 0, "top": 250, "height": 30, "text": "Enemy Tower", "fontSize": 18, "color": "#8899aa", "align": "center" } },
+              { "type": "ui-text", "props": { "name": "enemyHpText", "position": "absolute", "left": 0, "right": 0, "top": 280, "height": 30, "text": "HP: 10/10", "fontSize": 16, "color": "#ee4444", "align": "center" } }
+            ]
+          },
+          {
+            "type": "ui-view",
+            "props": { "position": "absolute", "left": "calc(50% - 160px)", "top": 355, "width": 320, "height": 16, "tint": "#2a3644" },
+            "children": [
+              { "type": "ui-view", "props": { "name": "hpBarFill", "position": "absolute", "left": 0, "top": 0, "width": 320, "height": 16, "tint": "#ee4444" } }
+            ]
+          },
+          { "type": "ui-button", "props": { "name": "btnAttack", "position": "absolute", "left": "calc(50% - 140px)", "top": 400, "width": 280, "height": 72, "tint": "#c49020", "text": "ATTACK!", "fontSize": 28 } },
+          { "type": "ui-text", "props": { "name": "attackInfo", "position": "absolute", "left": 0, "right": 0, "top": 490, "height": 30, "text": "Click to deal 1 damage", "fontSize": 16, "color": "#556677", "align": "center" } },
+          { "type": "ui-text", "props": { "name": "comboText", "position": "absolute", "left": 0, "right": 0, "top": 525, "height": 40, "text": "", "fontSize": 24, "color": "#f0b840", "bold": true, "align": "center" } }
+        ]
+      },
+      {
+        "type": "ui-view",
+        "props": { "position": "absolute", "right": 40, "top": 100, "width": 320, "height": 500, "tint": "#141b24" },
+        "children": [
+          { "type": "ui-text", "props": { "position": "absolute", "left": 20, "top": 16, "width": 280, "height": 36, "text": "Upgrade", "fontSize": 22, "color": "#f0b840", "bold": true } },
+          { "type": "ui-view", "props": { "position": "absolute", "left": 20, "top": 60, "right": 20, "height": 1, "tint": "#2a3644" } },
+          { "type": "ui-button", "props": { "name": "btnUpAtk", "position": "absolute", "left": 20, "top": 80, "width": 280, "height": 56, "tint": "#1a2332", "text": "+ATK    10g", "fontSize": 18 } },
+          { "type": "ui-button", "props": { "name": "btnUpDef", "position": "absolute", "left": 20, "top": 150, "width": 280, "height": 56, "tint": "#1a2332", "text": "+DEF    10g", "fontSize": 18 } },
+          { "type": "ui-button", "props": { "name": "btnUpHp", "position": "absolute", "left": 20, "top": 220, "width": 280, "height": 56, "tint": "#1a2332", "text": "+HP     15g", "fontSize": 18 } },
+          { "type": "ui-button", "props": { "name": "btnAuto", "position": "absolute", "left": 20, "top": 290, "width": 280, "height": 56, "tint": "#1a2332", "text": "Auto ATK  50g", "fontSize": 18 } },
+          { "type": "ui-view", "props": { "position": "absolute", "left": 20, "top": 370, "right": 20, "height": 1, "tint": "#2a3644" } },
+          { "type": "ui-button", "props": { "name": "btnCrit", "position": "absolute", "left": 20, "top": 390, "width": 280, "height": 56, "tint": "#1a2332", "text": "Crit%    100g", "fontSize": 18 } }
+        ]
+      },
+      { "type": "ui-view", "props": { "position": "absolute", "left": 0, "right": 0, "bottom": 0, "height": 4, "tint": "#2a3644" } },
+      { "type": "ui-text", "props": { "name": "msgText", "position": "absolute", "left": 0, "right": 0, "bottom": 8, "height": 24, "text": "Welcome, Commander! Click ATTACK to begin.", "fontSize": 14, "color": "#556677", "align": "center" } }
+    ]
+  }
+}

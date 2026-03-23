@@ -89,6 +89,11 @@ export class UnityAdapter implements IEngineAdapter {
       this.cacheImage(go);
     }
 
+    if (type === 'ui-view') {
+      const img = go.GetComponent('Image');
+      if (img) UIBridge.SetColor(img, 1, 1, 1, 0);
+    }
+
     this.cacheRT(go, isText, type);
     go.transform.SetParent(null, false);
     return go;
@@ -224,7 +229,7 @@ export class UnityAdapter implements IEngineAdapter {
         UIBridge.SetPivot(cached.rt, val, cached.rt.pivot.y);
         break;
       case 'pivotY':
-        UIBridge.SetPivot(cached.rt, cached.rt.pivot.x, val);
+        UIBridge.SetPivot(cached.rt, cached.rt.pivot.x, 1 - val);
         break;
 
       // Text props

@@ -1,8 +1,18 @@
 import { TOWER_UI_SCHEMA, type UISchema, type ComponentSchema, type PropDef } from './schema';
+import type { TowerDocument } from './document';
+
+export interface DataBindInfo {
+  role: 'display' | 'event' | 'list';
+  field?: string;
+  protoType?: 'string' | 'int32' | 'float' | 'bool' | 'bytes' | 'int64' | 'double';
+  event?: string;
+  itemType?: string;
+}
 
 export interface UINode {
   type: string;
   props?: Record<string, any>;
+  dataBind?: DataBindInfo;
   children?: (UINode | string)[];
 }
 
@@ -15,6 +25,89 @@ export function validateUI(node: UINode, schema: UISchema = TOWER_UI_SCHEMA): Va
   const errors: ValidationError[] = [];
   validateNode(node, schema, '', errors);
   return errors;
+}
+
+export function validateDocument(doc: unknown, schema: UISchema = TOWER_UI_SCHEMA): ValidationError[] {
+  const errors: ValidationError[] = [];
+
+  if (!doc || typeof doc !== 'object') {
+    errors.push({ path: '', message: 'Document must be an object' });
+    return errors;
+  }
+
+  const d = doc as Record<string, any>;
+
+  if (d.$schema !== 'tower-ui') {
+    errors.push({ path: '$schema', message: `Expected "tower-ui", got "${d.$schema}"` });
+  }
+  if (d.version !== '1.0') {
+    errors.push({ path: 'version', message: `Expected "1.0", got "${d.version}"` });
+  }
+
+  if (!d.meta || typeof d.meta !== 'object') {
+    errors.push({ path: 'meta', message: 'meta is required and must be an object' });
+  } else {
+    if (typeof d.meta.name !== 'string' || !d.meta.name) {
+      errors.push({ path: 'meta.name', message: 'meta.name is required' });
+    }
+    if (typeof d.meta.designWidth !== 'number' || d.meta.designWidth <= 0) {
+      errors.push({ path: 'meta.designWidth', message: 'meta.designWidth must be a positive number' });
+    }
+    if (typeof d.meta.designHeight !== 'number' || d.meta.designHeight <= 0) {
+      errors.push({ path: 'meta.designHeight', message: 'meta.designHeight must be a positive number' });
+    }
+  }
+
+  if (!d.root || typeof d.root !== 'object') {
+    errors.push({ path: 'root', message: 'root is required and must be a UINode' });
+    return errors;
+  }
+
+  const components: Record<string, UINode> | undefined = d.components;
+  if (components) {
+    for (const [name, compNode] of Object.entries(components)) {
+      validateNodeWithRefs(compNode, schema, `components.${name}`, errors, components);
+    }
+  }
+
+  validateNodeWithRefs(d.root, schema, 'root', errors, components);
+  return errors;
+}
+
+function validateNodeWithRefs(
+  node: UINode,
+  schema: UISchema,
+  path: string,
+  errors: ValidationError[],
+  components?: Record<string, UINode>,
+): void {
+  if (node.type === '$ref') {
+    const refName = (node as any).ref;
+    if (typeof refName !== 'string' || !refName) {
+      errors.push({ path, message: '$ref node must have a "ref" string property' });
+      return;
+    }
+    if (components && !components[refName]) {
+      errors.push({ path, message: `$ref "${refName}" not found in components` });
+    }
+    if (node.children) {
+      node.children.forEach((child, i) => {
+        if (typeof child === 'object') {
+          validateNodeWithRefs(child, schema, `${path}[${i}]`, errors, components);
+        }
+      });
+    }
+    return;
+  }
+
+  validateNode(node, schema, path, errors);
+  if (node.children) {
+    node.children.forEach((child, i) => {
+      if (typeof child === 'object') {
+        validateNodeWithRefs(child, schema, `${path}[${i}]`, errors, components);
+      }
+    });
+  }
 }
 
 function validateNode(node: UINode, schema: UISchema, path: string, errors: ValidationError[]): void {

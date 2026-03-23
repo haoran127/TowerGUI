@@ -1,0 +1,10 @@
+node_modules
+.tower-preview
+*.prefab
+*.unity
+*.meta
+apps/tower-game
+projects
+.git
+.gitignore
+*.md

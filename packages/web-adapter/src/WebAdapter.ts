@@ -296,16 +296,16 @@ export class WebAdapter implements IEngineAdapter {
         el.style.position = val;
         break;
       case 'top':
-        el.style.top = `${val}px`;
+        el.style.top = typeof val === 'number' ? `${val}px` : val;
         break;
       case 'left':
-        el.style.left = `${val}px`;
+        el.style.left = typeof val === 'number' ? `${val}px` : val;
         break;
       case 'right':
-        el.style.right = `${val}px`;
+        el.style.right = typeof val === 'number' ? `${val}px` : val;
         break;
       case 'bottom':
-        el.style.bottom = `${val}px`;
+        el.style.bottom = typeof val === 'number' ? `${val}px` : val;
         break;
 
       // Visual
@@ -377,6 +377,10 @@ export class WebAdapter implements IEngineAdapter {
       // Image
       case 'src':
         el.style.backgroundImage = val ? `url(${val})` : '';
+        if (val) {
+          if (!el.style.backgroundSize) el.style.backgroundSize = '100% 100%';
+          el.style.backgroundRepeat = 'no-repeat';
+        }
         if (allProps.sliceLeft || allProps.sliceRight || allProps.sliceTop || allProps.sliceBottom) {
           el.style.borderImageSource = val ? `url(${val})` : '';
           el.style.borderImageSlice = `${allProps.sliceTop ?? 0} ${allProps.sliceRight ?? 0} ${allProps.sliceBottom ?? 0} ${allProps.sliceLeft ?? 0} fill`;
@@ -494,12 +498,26 @@ export class WebAdapter implements IEngineAdapter {
       case 'clickSound':
         break;
 
+      case 'verticalAlign':
+        if (el.dataset.type === 'ui-text') {
+          if (val === 'middle') {
+            el.style.display = 'flex';
+            el.style.alignItems = 'center';
+            if (el.style.textAlign === 'center') el.style.justifyContent = 'center';
+            else if (el.style.textAlign === 'right') el.style.justifyContent = 'flex-end';
+          } else if (val === 'bottom') {
+            el.style.display = 'flex';
+            el.style.alignItems = 'flex-end';
+          }
+        }
+        break;
+
       // Handled elsewhere or no-op
       case 'atlas': case 'sliceLeft': case 'sliceRight': case 'sliceTop': case 'sliceBottom':
       case 'scale9Grid': case 'fillMethod': case 'fillOrigin': case 'flipX': case 'flipY':
       case 'preserveAspect': case 'step': case 'elastic': case 'inertia':
       case 'scrollbarVisibility': case 'onScroll': case 'onSubmit': case 'onFocus': case 'onBlur':
-      case 'placeholderColor': case 'multiline': case 'lineHeight': case 'verticalAlign':
+      case 'placeholderColor': case 'multiline': case 'lineHeight':
       case 'bgColor': case 'aspectRatio':
         break;
     }

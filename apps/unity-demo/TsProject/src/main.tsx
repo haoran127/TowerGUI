@@ -263,9 +263,9 @@ function runAutoTests() {
 function main() {
   runAutoTests();
 
-  // Start SLG Game Demo instead of the old HUD demo
-  const { startSLGGame } = require('./slg-game');
-  startSLGGame();
+  // Start LF Game (lfclient → TowerGUI migration demo)
+  const { startLFGame } = require('./lfgame/index');
+  startLFGame();
 }
 
 main();
